@@ -5,9 +5,12 @@ import { Operator } from "src/infrastructure/database/typeORM/entities/operator.
 export class AuthMeUseCase {
 
     execute(operator: Operator) {
+        
         return {
-            ...operator,
-            password: undefined
+            id: operator.id,
+            username: operator.username,
+            name: operator.name,
+            created_at: operator.createdAt
         }
     }
 

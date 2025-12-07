@@ -68,7 +68,7 @@ describe('E2E::V1::Auth::SignIn', () => {
         const response = await request.post('/v1/auth/sign-in').send({
             username: faker.internet.username()
         });
-        expect(response.statusCode).toBe(401)
+        expect(response.statusCode).toBe(400)
     })
 
     it('Should return invalid credentials when no username is received', async() => {
@@ -76,7 +76,7 @@ describe('E2E::V1::Auth::SignIn', () => {
         const response = await request.post('/v1/auth/sign-in').send({
             password: faker.internet.password()
         });
-        expect(response.statusCode).toBe(401)
+        expect(response.statusCode).toBe(400)
     })
 
     it('Should return invalid credentials when payload is too long', async() => {

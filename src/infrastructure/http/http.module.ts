@@ -9,6 +9,9 @@ import { TokenService } from "src/services/token.service";
 import { OperatorMiddleware } from "./middlewares/operator.middleware";
 import { AuthorizationMiddleware } from "./middlewares/authorization.middleware";
 import { AuthMeUseCase } from "src/application/usecases/auth/me.usecase";
+import { OperatorCreateUseCase } from "src/application/usecases/operator/create-operator.usecase";
+import { OperatorController } from "./controllers/operator.controller";
+import { OperatorDeleteUseCase } from "src/application/usecases/operator/delete-operator.usecase";
 
 @Module({
     imports: [DatabaseModule],
@@ -17,11 +20,14 @@ import { AuthMeUseCase } from "src/application/usecases/auth/me.usecase";
         TokenService,
         SeederService,
         AuthSignInUseCase,
-        AuthMeUseCase
+        AuthMeUseCase,
+        OperatorCreateUseCase,
+        OperatorDeleteUseCase
     ],
     controllers: [
         HealthController,
-        AuthController
+        AuthController,
+        OperatorController
     ]
 })
 export class HttpModule implements NestModule {

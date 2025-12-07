@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { OperatorRepository } from "src/application/gateways/operator-repository.gateway";
 import { AuthSignInDTO } from "src/domain/dtos/auth/sign-in.dto";
 import { InvalidCredentialsException } from "src/infrastructure/http/exceptions/auth/invalid-credentials.exception";
+import { InvalidRequestException } from "src/infrastructure/http/exceptions/auth/invalid-request.exception";
 import { CryptService } from "src/services/crypt.service";
 import { TokenService } from "src/services/token.service";
 
@@ -15,6 +16,15 @@ export class AuthSignInUseCase {
     ) {}
 
     async execute(payload: AuthSignInDTO) {
+
+        if (!payload.password || payload.password?.length == 0) {
+            throw new InvalidRequestException({message: 'Password is required'});
+        }
+
+         if (!payload.username || payload.username?.length == 0) {
+            throw new InvalidRequestException({message: 'Username is required'});
+        }
+
         const operator = await this.repository.findByUsername(payload.username);
 
         if (!operator) {
