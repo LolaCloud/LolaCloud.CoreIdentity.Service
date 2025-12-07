@@ -1,0 +1,26 @@
+import { Injectable, NestMiddleware, UnauthorizedException } from "@nestjs/common";
+import { OperatorRepository } from "src/application/gateways/operator-repository.gateway";
+
+@Injectable()
+export class OperatorMiddleware implements NestMiddleware {
+
+  constructor(
+    private readonly operatorRepository: OperatorRepository
+  ) { }
+
+  async use(req: any, res: any, next: (error?: Error | any) => void) {
+    const { operatorId } = req.internal
+
+    const operator = await this.operatorRepository.findById(operatorId)
+    
+    if (!operator) {
+        throw new UnauthorizedException()
+    }
+
+    this.operatorRepository.updateLastTimeActive(operator.id)
+
+    req.internal.operator = operator
+    next()
+  }
+
+}
