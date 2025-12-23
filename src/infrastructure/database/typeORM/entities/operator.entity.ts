@@ -1,5 +1,5 @@
-import { Nullable } from "src/domain/utils";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Permission } from "./permission.entity";
 
 @Entity()
 export class Operator {
@@ -25,6 +25,14 @@ export class Operator {
     })
     name: string;
 
+    @Column({
+        type: 'varchar',
+        length: 255,
+        default: null,
+        nullable: true
+    })
+    email: string | null
+
     @CreateDateColumn()
     createdAt: Date;
 
@@ -40,4 +48,11 @@ export class Operator {
     })
     lastTimeActive: Date | null;
 
+    @ManyToMany(() => Permission, (permission) => permission.operators)
+    @JoinTable({
+        name: 'operator_permissions',
+        joinColumn: { name: 'operator_id', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'permission_slug', referencedColumnName: 'slug' }
+    })
+    permissions: Permission[];
 }

@@ -5,6 +5,8 @@ import { Operator } from "../entities/operator.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DeepPartial, Repository } from "typeorm";
 import { CryptService } from "src/services/crypt.service";
+import { LolaPermissions } from "src/domain/enums/permissions.enum";
+import { Permission } from "../entities/permission.entity";
 
 @Injectable()
 export class TypeORMOperatorRepository implements OperatorRepository {
@@ -29,6 +31,10 @@ export class TypeORMOperatorRepository implements OperatorRepository {
         })
     }
 
+    async findAll(): Promise<Operator[]> {
+        return await this.repository.find();
+    }
+
     async create(operator: DeepPartial<Operator>) {
         const toCreate = this.repository.create(operator);
 
@@ -42,7 +48,7 @@ export class TypeORMOperatorRepository implements OperatorRepository {
         await this.repository.save({
             name: 'Root',
             username: 'root',
-            password: await this.cryptService.encrypt('toor')
+            password: await this.cryptService.encrypt('toor'),
         })
     }
 
@@ -72,6 +78,19 @@ export class TypeORMOperatorRepository implements OperatorRepository {
         }, {
             lastTimeActive: new Date()
         })
+    }
+
+    async getPermissions(operatorId: string): Promise<Permission[]> {
+        const operator = await this.repository.find({
+            where: {
+                id: operatorId
+            },
+            relations: {
+                permissions: true
+            }
+        })
+
+        return operator[0].permissions
     }
 
 }

@@ -39,14 +39,16 @@ export class OperatorCreateUseCase {
         const createdOperator = await this.repository.create({
             username: payload.username,
             name: payload.name,
-            password: await this.cryptService.encrypt(payload.password)
+            password: await this.cryptService.encrypt(payload.password),
+            email: payload.email
         })
 
         return {
             id: createdOperator.id,
             username: createdOperator.username,
             name: createdOperator.name,
-            created_at: createdOperator.createdAt
+            created_at: createdOperator.createdAt,
+            email: createdOperator.email
         }
 
     }

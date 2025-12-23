@@ -33,8 +33,9 @@ describe('E2E::V1::Operator::Post', () => {
         await app.init();
     })
 
-    it('Should create an operator with the data that has been sent', async() => {
-        const randomOperator = TEST_generateRandomOperator()        
+    it('Should create an operator with the data that has been sent - WITHOUT EMAIL', async() => {
+        const randomOperator = TEST_generateRandomOperator()    
+        randomOperator.email = undefined    
         
         const request = supertest(app.getHttpServer());
         const response = await request.post('/v1/operator')
@@ -49,6 +50,29 @@ describe('E2E::V1::Operator::Post', () => {
         expect(response.body.id).toBeTruthy();
         expect(response.body.username).toBe(randomOperator.username);
         expect(response.body.name).toBe(randomOperator.name);
+        expect(response.body.email).toBe(null)
+
+        await repository.HARD_deleteById(response.body.id);
+    })
+
+    it('Should create an operator with the data that has been sent - WITH EMAIL', async() => {
+        const randomOperator = TEST_generateRandomOperator()        
+        
+        const request = supertest(app.getHttpServer());
+        const response = await request.post('/v1/operator')
+            .set('Authorization', `Bearer ${accessToken}`)
+            .send({
+                username: randomOperator.username,
+                name: randomOperator.name,
+                password: randomOperator.password,
+                email: randomOperator.email
+            })
+
+        expect(response.statusCode).toEqual(201);
+        expect(response.body.id).toBeTruthy();
+        expect(response.body.username).toBe(randomOperator.username);
+        expect(response.body.name).toBe(randomOperator.name);
+        expect(response.body.email).toBe(randomOperator.email)
 
         await repository.HARD_deleteById(response.body.id);
     })

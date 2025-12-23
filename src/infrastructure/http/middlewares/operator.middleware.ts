@@ -17,6 +17,8 @@ export class OperatorMiddleware implements NestMiddleware {
         throw new UnauthorizedException()
     }
 
+    operator.permissions = await this.operatorRepository.getPermissions(operator.id);
+
     this.operatorRepository.updateLastTimeActive(operator.id)
 
     req.internal.operator = operator

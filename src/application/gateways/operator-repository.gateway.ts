@@ -1,5 +1,6 @@
 import { Nullable } from "src/domain/utils";
 import { Operator } from "src/infrastructure/database/typeORM/entities/operator.entity";
+import { Permission } from "src/infrastructure/database/typeORM/entities/permission.entity";
 import { DeepPartial } from "typeorm";
 
 export abstract class OperatorRepository {
@@ -11,6 +12,8 @@ export abstract class OperatorRepository {
     abstract deleteById(operatorId: string): Promise<void>
     abstract HARD_deleteById(operatorId: string): Promise<void>
     abstract findById(operatorId: string): Promise<Nullable<Operator>>;
+    abstract getPermissions(operatorId: string): Promise<Permission[]>
     abstract updateLastTimeActive(operatorId: string): Promise<void>;
+    abstract findAll(): Promise<Operator[]>;
 
 }

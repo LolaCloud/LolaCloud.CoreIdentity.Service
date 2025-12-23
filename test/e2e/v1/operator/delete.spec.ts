@@ -46,6 +46,7 @@ describe('E2E::V1::Operator::DELETE', () => {
                 })
 
             expect(response.statusCode).toBe(200)
+            await repository.HARD_deleteById(createdOperator.id)
         })
 
         it('Should throw an error when operator id that was received doesnt exists', async() => {
