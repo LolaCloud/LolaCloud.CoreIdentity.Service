@@ -27,7 +27,7 @@ export class TypeORMPermissionRepository implements PermissionRepository {
 
         for (const permission of permissions) {
             const alreadyExists = await this.repository.findBy({
-                slug:permission
+                slug: permission
             })
             if (alreadyExists.length === 0) {
                 await this.repository.save({

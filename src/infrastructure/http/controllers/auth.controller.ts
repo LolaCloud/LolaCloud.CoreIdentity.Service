@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Ip, Post, Req } from "@nestjs/common";
 import { AuthSignInUseCase } from "src/application/usecases/auth/sign-in.usecase";
 import { Operator } from "../decorators/operator.decorator";
 import { AuthMeUseCase } from "src/application/usecases/auth/me.usecase";
@@ -13,8 +13,8 @@ export class AuthController {
 
     @Post('/sign-in')
     @HttpCode(200)
-    async signInRoute(@Body() body) {
-        return await this.signIn.execute(body)
+    async signInRoute(@Body() body, @Ip() ip, @Req() request: Request) {
+        return await this.signIn.execute(body, ip, request.headers['user-agent'])
     }
 
     @Get('/me')

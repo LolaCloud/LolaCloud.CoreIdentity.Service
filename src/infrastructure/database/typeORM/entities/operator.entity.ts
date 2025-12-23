@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Permission } from "./permission.entity";
+import { Session } from "./session.entity";
 
 @Entity()
 export class Operator {
@@ -55,4 +56,7 @@ export class Operator {
         inverseJoinColumn: { name: 'permission_slug', referencedColumnName: 'slug' }
     })
     permissions: Permission[];
+
+    @OneToMany(() => Session, (session) => session.operator)
+    sessions: Session[];
 }
