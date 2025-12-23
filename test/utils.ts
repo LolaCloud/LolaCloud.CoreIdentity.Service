@@ -7,6 +7,7 @@ import { AuthSignInUseCase } from "src/application/usecases/auth/sign-in.usecase
 import { CryptService } from "src/services/crypt.service";
 import { PermissionRepository } from "src/application/gateways/permission-repository.gateway";
 import { LolaPermissions } from "src/domain/enums/permissions.enum";
+import { SessionRepository } from "src/application/gateways/session-repository.gateway";
 
 export function TEST_generateRandomOperator(): DeepPartial<Operator> {
     return {
@@ -23,6 +24,7 @@ export async function TEST_createTemporaryOperator(moduleRef: TestingModule): Pr
 
     let repository = moduleRef.get(OperatorRepository);
     let permissionRepository = moduleRef.get(PermissionRepository);
+    let sessionRepository = moduleRef.get(SessionRepository)
     let signInUseCase = moduleRef.get(AuthSignInUseCase);
     let cryptService = moduleRef.get(CryptService)
 
@@ -40,12 +42,15 @@ export async function TEST_createTemporaryOperator(moduleRef: TestingModule): Pr
     const accessToken = ((await signInUseCase.execute({
         password: partialOperator.password as string,
         username: partialOperator.username as string
-    })).access_token)
+    }, '::1', 'lola_tdd')).access_token)
 
     return {
         createdOperator: operator,
         accessToken,
         original: partialOperator as Operator,
-        deleteFunction: async () => repository.HARD_deleteById(operator.id)
+        deleteFunction: async () => {
+            await sessionRepository.HARD_deleteByOperatorId(operator.id);
+            await repository.HARD_deleteById(operator.id)
+        }
     }
 }

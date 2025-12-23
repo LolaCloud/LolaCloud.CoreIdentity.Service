@@ -30,5 +30,13 @@ export class TypeORMSessionRepository implements SessionRepository {
             lastActivityAt: new Date()
         })
     }
+
+    async HARD_deleteByOperatorId(operatorId: string): Promise<void> {
+        await this.repository.delete({
+            operator: {
+                id: operatorId
+            }
+        })
+    }
  
 }

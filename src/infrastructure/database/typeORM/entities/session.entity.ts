@@ -1,6 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, Index } from "typeorm";
 import { Operator } from "./operator.entity";
 
+type Relation<T> = T
+
 @Entity()
 export class Session {
   @PrimaryGeneratedColumn('uuid')
@@ -8,7 +10,7 @@ export class Session {
 
   @Column()
   @Index()
-  tokenIdentifier: string; // Um ID único enviado no payload do JWT
+  tokenIdentifier: string;
 
   @Column({ nullable: true })
   ipAddress: string;
@@ -17,10 +19,10 @@ export class Session {
   userAgent: string;
 
   @Column({ nullable: true })
-  deviceType: string; // Ex: Mobile, Desktop, Tablet
+  deviceType: string;
 
   @Column({ nullable: true })
-  location: string; // Ex: "São Paulo, BR" (pode ser preenchido via GeoIP)
+  location: string;
 
   @Column({ default: true })
   isActive: boolean;
@@ -37,7 +39,9 @@ export class Session {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Operator, (operator) => operator.sessions)
-  operator: Operator;
-  
+  @ManyToOne('Operator', 'sessions', {
+    onDelete: 'CASCADE'
+  })
+  operator: Relation<Operator>; 
+
 }
