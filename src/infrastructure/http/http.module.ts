@@ -8,13 +8,15 @@ import { CryptService } from "src/services/crypt.service";
 import { TokenService } from "src/services/token.service";
 import { OperatorMiddleware } from "./middlewares/operator.middleware";
 import { AuthorizationMiddleware } from "./middlewares/authorization.middleware";
-import { AuthMeUseCase } from "src/application/usecases/auth/me.usecase";
 import { OperatorCreateUseCase } from "src/application/usecases/operator/create-operator.usecase";
 import { OperatorController } from "./controllers/operator.controller";
 import { OperatorDeleteUseCase } from "src/application/usecases/operator/delete-operator.usecase";
 import { GetAllOperatorsUseCase } from "src/application/usecases/operator/get-all-operator.usecase";
 import { OperatorByIdUseCase } from "src/application/usecases/operator/operator-by-id.usecase";
 import { UpdateOperatorUseCase } from "src/application/usecases/operator/update-operator.usecase";
+import { UpdateOperatorPasswordUseCase } from "src/application/usecases/auth/update-password.usecase";
+import { GetSessionsUseCase } from "src/application/usecases/auth/get-sessions.usecase";
+import { DisableSessionUseCase } from "src/application/usecases/auth/disable-session.usecase";
 
 @Module({
     imports: [DatabaseModule],
@@ -23,12 +25,14 @@ import { UpdateOperatorUseCase } from "src/application/usecases/operator/update-
         TokenService,
         SeederService,
         AuthSignInUseCase,
-        AuthMeUseCase,
         OperatorCreateUseCase,
         OperatorDeleteUseCase,
         GetAllOperatorsUseCase,
         OperatorByIdUseCase,
-        UpdateOperatorUseCase
+        UpdateOperatorUseCase,
+        UpdateOperatorPasswordUseCase,
+        GetSessionsUseCase,
+        DisableSessionUseCase
     ],
     controllers: [
         HealthController,

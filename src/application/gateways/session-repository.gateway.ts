@@ -8,4 +8,7 @@ export abstract class SessionRepository {
     abstract updateLastActivityAt(sessionId: string): Promise<void>
     abstract HARD_deleteByOperatorId(operatorId: string): Promise<void>
     abstract disableSessionsByOperatorId(operatorId: string): Promise<void>
+    abstract findByOperatorId(operatorId: string): Promise<Session[]>
+    abstract disableSessionById(sessionId: string): Promise<void>
+    abstract findById(sessionId: string): Promise<Nullable<Session>>
 }

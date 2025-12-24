@@ -39,11 +39,9 @@ describe('E2E::V1::Operator::DELETE', () => {
             const createdOperator = await repository.create(randomOperator);
             
             const request = supertest(app.getHttpServer());
-            const response = await request.delete('/v1/operator')
+            const response = await request.delete('/v1/operator/' + createdOperator.id)
                 .set('Authorization', `Bearer ${accessToken}`)
-                .send({
-                    operatorId: createdOperator.id
-                })
+                .send()
 
             expect(response.statusCode).toBe(200)
             await repository.HARD_deleteById(createdOperator.id)
@@ -51,11 +49,9 @@ describe('E2E::V1::Operator::DELETE', () => {
 
         it('Should throw an error when operator id that was received doesnt exists', async() => {
             const request = supertest(app.getHttpServer());
-            const response = await request.delete('/v1/operator')
+            const response = await request.delete('/v1/operator/hello_world')
                 .set('Authorization', `Bearer ${accessToken}`)
-                .send({
-                    operatorId: 'hello_world'
-                })
+                .send()
 
             expect(response.statusCode).toBe(400)
         })
@@ -67,11 +63,9 @@ describe('E2E::V1::Operator::DELETE', () => {
             }
 
             const request = supertest(app.getHttpServer());
-            const response = await request.delete('/v1/operator')
+            const response = await request.delete('/v1/operator/' + (rootUser as Operator).id)
                 .set('Authorization', `Bearer ${accessToken}`)
-                .send({
-                    operatorId: (rootUser as Operator).id
-                })
+                .send()
 
             expect(response.statusCode).toBe(400)
         })

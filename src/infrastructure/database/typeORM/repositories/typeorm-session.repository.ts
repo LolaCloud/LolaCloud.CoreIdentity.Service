@@ -48,5 +48,35 @@ export class TypeORMSessionRepository implements SessionRepository {
             isActive: false
         })
     }
+
+    async findByOperatorId(operatorId: string): Promise<Session[]> {
+        return await this.repository.find({
+            where: {
+                operator: {
+                    id: operatorId
+                },
+                isActive: true
+            }
+        })
+    }
+
+    async disableSessionById(sessionId: string): Promise<void> {
+        await this.repository.update({
+            id: sessionId
+        }, {
+            isActive: false,
+        })
+    }
+
+    async findById(sessionId: string): Promise<Nullable<Session>> {
+        return await this.repository.findOne({
+            where: {
+                id: sessionId
+            },
+            relations: {
+                operator: true
+            }
+        })
+    }
  
 }
