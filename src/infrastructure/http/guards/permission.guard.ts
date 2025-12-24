@@ -14,6 +14,8 @@ export class PermissionsGuard implements CanActivate {
       context.getClass(),
     ]);
 
+    if (!requiredPermission) return true
+
     const operator = context.switchToHttp().getRequest().internal.operator as Operator;
 
     const isRoot = operator.username === 'root';

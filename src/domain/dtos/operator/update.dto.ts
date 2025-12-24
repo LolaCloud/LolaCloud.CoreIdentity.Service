@@ -1,9 +1,8 @@
 import { LolaPermissions } from "src/domain/enums/permissions.enum";
+import { Nullable } from "src/domain/utils";
 
-export type OperatorCreateDTO = {
-    username: string;
-    password: string;
+export type OperatorUpdateDTO = {
     name: string;
-    email?: string;
+    email: Nullable<string>;
     permissions: LolaPermissions[]
 }

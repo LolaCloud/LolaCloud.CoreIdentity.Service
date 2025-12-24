@@ -1,19 +1,23 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { OperatorRepository } from "src/application/gateways/operator-repository.gateway";
 
 @Injectable()
-export class GetAllOperatorsUseCase {
+export class OperatorByIdUseCase {
 
     constructor(
         private readonly repository: OperatorRepository
     ) {
     }
 
-    async execute() {
-        const operators = await this.repository.findAll();
+    async execute(id: string) {
+        const operator = await this.repository.findById(id);
+
+        if (!operator) {
+            throw new NotFoundException()
+        }
 
         return {
-            operators: operators.map(operator => ({
+            operator: {
                 id: operator.id,
                 username: operator.username,
                 name: operator.name,
@@ -22,7 +26,7 @@ export class GetAllOperatorsUseCase {
                 updated_at: operator.updatedAt,
                 permissions: operator.permissions,
                 active: operator.deletedAt == null
-            }))
+            }
         }
     }
 

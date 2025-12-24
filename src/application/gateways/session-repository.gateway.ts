@@ -5,6 +5,7 @@ import { DeepPartial } from "typeorm";
 export abstract class SessionRepository {
     abstract create(session: DeepPartial<Session>): Promise<Session>;
     abstract findByTokenIdentifier(tokenIdentifier: string): Promise<Nullable<Session>>
-    abstract lastActivityAt(sessionId: string): Promise<void>
+    abstract updateLastActivityAt(sessionId: string): Promise<void>
     abstract HARD_deleteByOperatorId(operatorId: string): Promise<void>
+    abstract disableSessionsByOperatorId(operatorId: string): Promise<void>
 }

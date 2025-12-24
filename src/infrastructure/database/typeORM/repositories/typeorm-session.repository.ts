@@ -25,7 +25,7 @@ export class TypeORMSessionRepository implements SessionRepository {
         })
     }
 
-    async lastActivityAt(sessionId: string): Promise<void> {
+    async updateLastActivityAt(sessionId: string): Promise<void> {
         await this.repository.update(sessionId, {
             lastActivityAt: new Date()
         })
@@ -36,6 +36,16 @@ export class TypeORMSessionRepository implements SessionRepository {
             operator: {
                 id: operatorId
             }
+        })
+    }
+
+    async disableSessionsByOperatorId(operatorId: string): Promise<void> {
+        await this.repository.update({
+            operator: {
+                id: operatorId
+            }
+        }, {
+            isActive: false
         })
     }
  

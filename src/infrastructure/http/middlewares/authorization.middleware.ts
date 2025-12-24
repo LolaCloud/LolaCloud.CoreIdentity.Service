@@ -23,7 +23,7 @@ export class AuthorizationMiddleware implements NestMiddleware {
           throw new UnauthorizedException()
         }
 
-        this.sessionRepository.lastActivityAt(session.id)
+        this.sessionRepository.updateLastActivityAt(session.id)
         
         // @ts-expect-error
         req.internal = {

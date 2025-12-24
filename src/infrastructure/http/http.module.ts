@@ -13,6 +13,8 @@ import { OperatorCreateUseCase } from "src/application/usecases/operator/create-
 import { OperatorController } from "./controllers/operator.controller";
 import { OperatorDeleteUseCase } from "src/application/usecases/operator/delete-operator.usecase";
 import { GetAllOperatorsUseCase } from "src/application/usecases/operator/get-all-operator.usecase";
+import { OperatorByIdUseCase } from "src/application/usecases/operator/operator-by-id.usecase";
+import { UpdateOperatorUseCase } from "src/application/usecases/operator/update-operator.usecase";
 
 @Module({
     imports: [DatabaseModule],
@@ -24,7 +26,9 @@ import { GetAllOperatorsUseCase } from "src/application/usecases/operator/get-al
         AuthMeUseCase,
         OperatorCreateUseCase,
         OperatorDeleteUseCase,
-        GetAllOperatorsUseCase
+        GetAllOperatorsUseCase,
+        OperatorByIdUseCase,
+        UpdateOperatorUseCase
     ],
     controllers: [
         HealthController,
