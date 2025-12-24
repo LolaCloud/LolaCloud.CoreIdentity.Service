@@ -29,6 +29,7 @@ export class AuthController {
 
     @Get('/sessions')
     async getOperatorSessions(@Operator() operator, @Req() req) {
+        console.log(req.headers)
         return await this.getSessionsUseCase.execute(operator.id, req.internal.sessionId)
     }
 
