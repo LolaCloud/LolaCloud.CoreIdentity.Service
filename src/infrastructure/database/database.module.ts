@@ -14,7 +14,9 @@ import { Session } from "./typeORM/entities/session.entity";
 
 @Module({
     imports: [
-        TypeOrmModule.forRoot(dataSource.options),
+        TypeOrmModule.forRoot({
+            ...dataSource.options,
+        }),
         TypeOrmModule.forFeature([
             Operator,
             Permission,

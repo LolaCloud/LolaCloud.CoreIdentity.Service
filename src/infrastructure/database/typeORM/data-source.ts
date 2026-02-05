@@ -14,5 +14,5 @@ export const dataSource = new DataSource({
     migrationsRun: true,
     migrations: ['dist/src/infrastructure/database/typeORM/migrations/*{.ts,.js}'],
     // logging: true,
-    ssl: false
+    ssl: false,
 })

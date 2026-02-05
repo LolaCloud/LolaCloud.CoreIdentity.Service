@@ -8,5 +8,6 @@ export class EnvConfig {
     public static DATABASE_URL = get('DATABASE_URL').asString();
     public static ENCRYPTION_STRING = get('ENCRYPTION_STRING').required().asString()
     public static SALT_ROUNDS = get('SALT_ROUNDS').required().asInt();
+    public static LOLA_MICROSERVICE_SECRET = get('LOLA_MICROSERVICE_SECRET').required().asString()
 
 }

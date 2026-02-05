@@ -20,9 +20,25 @@ export class TypeORMPermissionRepository implements PermissionRepository {
             LolaPermissions.LOLA_ALL,
             LolaPermissions.LCI_ALL,
             LolaPermissions.LCI_OPERATOR_CREATE,
-            LolaPermissions.LCI_OPERATOR_DELETE,
             LolaPermissions.LCI_OPERATOR_UPDATE,
-            LolaPermissions.LCI_OPERATOR_ALL
+            LolaPermissions.LCI_OPERATOR_DELETE,
+            LolaPermissions.LCI_OPERATOR_ALL,
+
+
+            LolaPermissions.LR_ALL,
+            LolaPermissions.LR_ACCOUNT_CREATE,
+            LolaPermissions.LR_ACCOUNT_UPDATE,
+            LolaPermissions.LR_ACCOUNT_DELETE,
+            LolaPermissions.LR_ACCOUNT_ALL,
+
+            LolaPermissions.LR_ZONE_ADD,
+            LolaPermissions.LR_ZONE_REMOVE,
+            LolaPermissions.LR_ZONE_ALL,
+
+            LolaPermissions.LR_RECORD_CREATE,
+            LolaPermissions.LR_RECORD_DELETE,
+            LolaPermissions.LR_RECORD_UPDATE,
+            LolaPermissions.LR_RECORD_ALL,
         ];
 
         for (const permission of permissions) {

@@ -1,81 +1,97 @@
 # LolaCloud Core Identity Service (LCI) 🔐
 
-O Lola Core Identity (LCI) é o serviço central de Gerenciamento de Identidade e Acesso (IAM) da plataforma Lola. Ele é responsável por garantir a segurança, autenticação e autorização granular em todo o ecossistema PaaS, servindo como a "fonte da verdade" para operadores e permissões.
+## Visão Geral
+O **Lola Core Identity Service** é a espinha dorsal de gerenciamento de identidade e acesso (IAM) da plataforma Lola. Ele é construído com NestJS, TypeScript e utiliza **Clean Architecture** para separar responsabilidades entre domínio, aplicação e infraestrutura.
 
-## 🚀 Diferenciais Técnicos
+## Arquitetura e Padrões
+- **Domain‑Driven Design**: Entidades, DTOs e enums são colocados em `src/domain`. Não há dependências externas neste layer.
+- **Use‑Case Services**: Lógica de negócio está em `src/application/usecases`. Cada caso de uso é uma classe com `execute()` e é injetado via NestJS.
+- **Infrastructure**: Conexões de banco (`src/infrastructure/database`) e middlewares HTTP (`src/infrastructure/http`). O módulo `HttpModule` registra rotas, middlewares de autorização e de operador.
+- **Injeção de Dependência**: NestJS fornece o container DI que facilita a troca de implementações (ex.: `RunwayService`).
+- **Migrations**: TypeORM com `migrationsRun: true`; migrações ficam em `src/infrastructure/database/typeORM/migrations`.
+- **Testing**: Testes unitários em `src/**/*.spec.ts` e e2e em `test/e2e`. Testes executados com Jest via `bun run test` ou `bun run test:e2e`.
 
-* **Arquitetura Limpa (Clean Architecture)**: Separação rigorosa entre regras de domínio, casos de uso e detalhes de infraestrutura.
+## Padrões de Segurança
+- **JWT** com identificador de sessão único (`sid`).
+- **Bcrypt** para hashing de senhas; número de rounds definido por `SALT_ROUNDS`.
+- **RBAC Wildcard**: Permissões no formato `service::resource::action` ou `service::resource::*`.
+- **Audit Logging**: Eventos de segurança são emitidos para o Lola Keeper (não detalhado aqui).
 
-* **RBAC com Wildcards**: Sistema de permissões dinâmico inspirado no AWS IAM (servico::recurso::*).
+## Bibliotecas e Tecnologias
+| Stack | Utilização |
+|-------|------------|
+| **NestJS** | Framework web, suporte a módulos, pipes e filtros |
+| **TypeScript** | Linguagem de tipagem estática |
+| **TypeORM** | ORM PostgreSQL com suporte a migrations |
+| **Bun** | Gerenciador de pacotes e runner (scripts npm equivalentes) |
+| **Jest** | Testes unitários e e2e |
+| **Prettier** | Formatação de código |
+| **ESLint** | Linter com regras de estilo |
+| **dotenv** | Carregamento de variáveis de ambiente |
+| **axios** | Cliente HTTP (RunwayService) |
 
-* **Gestão de Sessões Ativas**: Rastreamento de dispositivos, endereços IP e revogação de sessões em tempo real.
+## Instalação e Execução
+```bash
+# Clone o repositório
+git clone <repo-url>
+cd Lola.CoreIdentity.Service
 
-* **Pronto para Auditoria**: Design focado em emitir eventos de segurança para o Lola Keeper.
+# Instale dependências (Bun ou npm)
+bun install
 
-* **TDD (Test-Driven Development)**: Cobertura de testes E2E para fluxos críticos de autenticação e gestão de operadores.
+# Copie o arquivo de exemplo de env
+cp .env.example .env
+# Ajuste as variáveis conforme necessário
 
-## 🛠️ Tech Stack
+# Rode migrations (já é executado na inicialização)
+bun run typeorm migration:run
 
-* **Framework**: NestJS
+# Desenvolvimento
+bun run start:dev
 
-* **Linguagem**: TypeScript
+# Produção
+bun run build
+bun run start
+```
 
-* **Runtime/Package Manager**: Bun
+## Scripts Disponíveis
+| Script | Descrição |
+|--------|------------|
+| `bun run build` | Compila TS para `dist/` |
+| `bun run start` | Executa a build em produção |
+| `bun run start:dev` | Executa em modo watch |
+| `bun run lint` | Roda ESLint e corrige automaticamente |
+| `bun run format` | Formata arquivos com Prettier |
+| `bun run test` | Executa testes unitários |
+| `bun run test:e2e` | Executa testes de ponta a ponta |
+| `bun run test:e2e <file>` | Executa um arquivo de teste e2e específico |
+| `bun run typeorm migration:generate <name>` | Cria nova migration |
+| `bun run typeorm migration:run` | Aplica migrations pendentes |
+| `bun run typeorm migration:revert` | Reverte última migration |
 
-* **ORM**: TypeORM
+## Rotas Principais
+- `/v1/auth/**` – login, logout, token refresh, etc. |
+- `/v1/operator/**` – CRUD de operadores e gestão de permissões |
+- `/v1/runway/**` – Integrações com serviço externo (Runway) |
+- `/v1/health` – endpoint de verificação de saúde |
 
-* **Banco de Dados**: PostgreSQL
+## Variáveis de Ambiente
+```dotenv
+APPLICATION_PORT=3000
+DATABASE_URL=postgres://lola:lola@localhost:5432/main
+ENCRYPTION_STRING=YOUR_SECRET
+SALT_ROUNDS=5
+LOLA_MICROSERVICE_SECRET=YOUR_SECRET
+```
 
-* **Segurança**: JWT (JSON Web Tokens) com identificadores de sessão únicos (sid)
+## Como Contribuir
+1. Faça fork e crie uma branch feature. |
+2. Siga os padrões de código (Prettier + ESLint). |
+3. Crie tests que cubram novas funcionalidades. |
+4. Abra um Pull Request. |
 
+## Documentação Adicional
+A documentação OpenAPI está disponível em `/api` quando o servidor está rodando. |
 
-## 🔐 Sistema de Permissões (IAM)
-
-O LCI utiliza uma lógica de seletor granular. Exemplos de permissões suportadas:
-
-* **lci::operator::create**: Permissão específica para criar operadores.
-
-* **lci::operator::***: Permissão para qualquer ação no módulo de operadores.
-
-## 🚀 Como Iniciar
-
-### Pré-requisitos
-
-* Bun instalado (ou Node.js)
-
-* Instância do PostgreSQL rodando
-
-### Instalação
-
-#### Clone o repositório e instale as dependências:
-
-* `bun install`
-
-Configure as variáveis de ambiente:
-
-* `cp .env.example .env`
-
-
-Execute as migrações do banco de dados:
-
-* `bun run typeorm migration:run`
-
-
-## Execução
-
-### Modo desenvolvimento
-* `bun run start:dev`
-
-### Build de produção
-* `bun run build`
-
-
-## 🧪 Testes (TDD)
-
-O projeto prioriza testes de ponta a ponta (E2E) para garantir a integridade da API:
-
-### Executar todos os testes E2E
-* `bun run test:e2e`
-
-### Executar um teste específico (ex: Auth)
-* `bun run test:e2e test/e2e/v1/auth/sign-in/post.spec.ts`
+## Suporte
+Para dúvidas ou issues, abra um ticket no GitHub. |

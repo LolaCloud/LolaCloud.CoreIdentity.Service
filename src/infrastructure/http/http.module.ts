@@ -17,29 +17,71 @@ import { UpdateOperatorUseCase } from "src/application/usecases/operator/update-
 import { UpdateOperatorPasswordUseCase } from "src/application/usecases/auth/update-password.usecase";
 import { GetSessionsUseCase } from "src/application/usecases/auth/get-sessions.usecase";
 import { DisableSessionUseCase } from "src/application/usecases/auth/disable-session.usecase";
+import { RunwayService } from "src/services/runway/runway.service";
+import { GetAllCloudflareAccountsUseCase } from "src/application/usecases/runway/get-all-accounts.usecase";
+import { RunwayController } from "./controllers/runway.controller";
+import { VerifyCloudflareTokenUseCase } from "src/application/usecases/runway/verify-cloudflare-token.usecase";
+import { GetZonesFromCloudflareUseCase } from "src/application/usecases/runway/get-zones-from-cloudflare.usecase";
+import { CreateCloudflareAccountUseCase } from "src/application/usecases/runway/create-cloudflare-account.usecase";
+import { AddZoneUseCase } from "src/application/usecases/runway/add-zone.usecase";
+import { GetZonesUseCase } from "src/application/usecases/runway/get-all-zones.usecase";
+import { GetDNSRecordsByManagedZoneIdUseCase } from "src/application/usecases/runway/get-dns-records-by-managed-zone-id.usecase";
+import { AddDNSRecordUseCase } from "src/application/usecases/runway/add-dns-record.usecase";
+import { UpdateDNSRecordUseCase } from "src/application/usecases/runway/update-dns-record.usecase";
+import { DeleteDNSRecordUseCase } from "src/application/usecases/runway/delete-dns-record.usecase";
+import { RemoveZoneUseCase } from "src/application/usecases/runway/remove-zone-record.usecase";
+
+
+const SERVICES = [
+    CryptService,
+    TokenService,
+    SeederService,
+]
+
+const LOLA_SERVICES = [
+    RunwayService
+]
+
+const USE_CASES = [
+    AuthSignInUseCase,
+    OperatorCreateUseCase,
+    OperatorDeleteUseCase,
+    GetAllOperatorsUseCase,
+    OperatorByIdUseCase,
+    UpdateOperatorUseCase,
+    UpdateOperatorPasswordUseCase,
+    GetSessionsUseCase,
+    DisableSessionUseCase,
+    GetAllCloudflareAccountsUseCase,
+    VerifyCloudflareTokenUseCase,
+    GetZonesFromCloudflareUseCase,
+    CreateCloudflareAccountUseCase,
+    AddZoneUseCase,
+    GetZonesUseCase,
+    GetDNSRecordsByManagedZoneIdUseCase,
+    AddDNSRecordUseCase,
+    UpdateDNSRecordUseCase,
+    DeleteDNSRecordUseCase,
+    RemoveZoneUseCase
+]
+
+const CONTROLLERS = [
+        HealthController,
+        AuthController,
+        OperatorController,
+        RunwayController
+]
 
 @Module({
     imports: [DatabaseModule],
     providers: [
-        CryptService,
-        TokenService,
-        SeederService,
-        AuthSignInUseCase,
-        OperatorCreateUseCase,
-        OperatorDeleteUseCase,
-        GetAllOperatorsUseCase,
-        OperatorByIdUseCase,
-        UpdateOperatorUseCase,
-        UpdateOperatorPasswordUseCase,
-        GetSessionsUseCase,
-        DisableSessionUseCase
+        ...SERVICES,
+        ...LOLA_SERVICES,
+        ...USE_CASES,
     ],
-    controllers: [
-        HealthController,
-        AuthController,
-        OperatorController
-    ]
+    controllers: CONTROLLERS
 })
+
 export class HttpModule implements NestModule {
 
     configure(consumer: MiddlewareConsumer) {
