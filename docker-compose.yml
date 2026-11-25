@@ -1,5 +1,5 @@
 services:
-  lci-postgres:
+  lola-postgres:
     image: postgres:17-alpine
     container_name: lola-lci-postgres
     restart: unless-stopped
@@ -17,5 +17,60 @@ services:
       timeout: 5s
       retries: 5
 
+  traefik:
+    image: traefik:v3.1
+    container_name: lola-traefik
+    restart: unless-stopped
+    ports:
+      - "0.0.0.0:5432:5432"
+      - "0.0.0.0:3306:3306"
+      - "0.0.0.0:1433:1433"
+      - "0.0.0.0:8085:8085"
+    networks:
+      - lola-network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./relate/traefik/dynamic:/etc/traefik/dynamic:ro
+    command:
+      - "--api.insecure=true"
+      - "--api.dashboard=true"
+      - "--entrypoints.postgres.address=:5432"
+      - "--entrypoints.mysql.address=:3306"
+      - "--entrypoints.sqlserver.address=:1433"
+      - "--entrypoints.traefik.address=:8085"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=lola-network"
+      - "--providers.file.directory=/etc/traefik/dynamic"
+      - "--providers.file.watch=true"
+      - "--log.level=INFO"
+
+  minio:
+    image: minio/minio:latest
+    container_name: lola-store-minio
+    user: "0:0"
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    ports:
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
+    environment:
+      MINIO_ROOT_USER: lola_admin
+      MINIO_ROOT_PASSWORD: lola_admin_secret
+      MINIO_BROWSER: "on"
+      MINIO_PROMETHEUS_AUTH_TYPE: public
+    volumes:
+      - store_minio_data:/data
+    networks:
+      - lola-network
+
+networks:
+  lola-network:
+    name: lola-network
+    external: true
+
 volumes:
   lci_pg_data:
+    name: lci_lci_pg_data
+  store_minio_data:
+    name: lola_store_minio_data
